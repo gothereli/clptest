@@ -1,0 +1,83 @@
+#coding=utf-8
+#import string
+name='test.txt'
+f1=open(name,'r',encoding='utf-8')
+f2=open("fmm_"+name,'w',encoding='utf-8')
+dt='ne_dict_test.txt'
+
+
+def load_nedict(fname):  #将词典读进来
+    fin=open(fname,'r',encoding='utf-8')
+    n_words=0
+    while 1:
+        n_words+=1
+        w=''
+        f=''
+        line=fin.readline()
+        line=line.replace('\r','')
+        line=line.replace('\n','')
+        linelen=len(line)
+        if(linelen<2):
+            print(n_words)
+            return n_words
+        sline=line.split('\t')
+        w=sline[0]
+        if len(sline)>1:
+            f=sline[1]
+        if w in dict1:
+            dict1[w]+='_'+f
+        else:
+            dict1[w]=f
+    print(n_words)    
+    return n_words
+
+#python太恶心了，一个tab自动对齐搞死人啊！！！不知道怎么的就错了！
+
+def fmm(text): #最大匹配法分词
+    textlen=len(text)
+    print(textlen)
+    pos=0
+    maxlen=10
+    while pos<=textlen:
+        tmplen=maxlen
+        if(textlen-pos<maxlen):
+        	tmplen=textlen-pos
+        while tmplen>1:
+            w1=text[pos:pos+tmplen]
+            if w1 in dict1:
+                print(w1,'/')
+                pos+=tmplen-1
+                break
+            tmplen-=1
+        if tmplen==1:
+           print(text[pos],' ')
+        pos+=1
+    return
+    
+def fmm_file(text,fout): #最大匹配法分词,文件版
+    textlen=len(text)
+    print(textlen)
+    pos=0
+    maxlen=10
+    while pos<=textlen:
+        tmplen=maxlen
+        if(textlen-pos<maxlen):
+        	tmplen=textlen-pos
+        while tmplen>1:
+            w1=text[pos:pos+tmplen]
+            if w1 in dict1:
+                ss='['+w1+'/'+dict1[w1]+']'
+                fout.write(ss)
+                pos+=tmplen-1
+                break
+            tmplen-=1
+        if tmplen==1:
+           fout.write(text[pos])
+        pos+=1
+    return
+dict1={'word':'0'}
+load_nedict(dt)
+tt='司馬遷的史記都是漢武帝漢武帝漢武帝漢武帝漢武帝漢武帝漢武帝漢武帝'
+
+text=f1.read()
+fmm_file(text,f2)
